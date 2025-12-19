@@ -68,7 +68,7 @@ Candidates were docked back into the HSP90 binding pocket to measure binding aff
 ├── scripts/             # Evaluation and patching scripts
 ├── docking/             # Vina config and receptor PDBQT
 ├── generated_molecules/ # Raw AI outputs (.xyz, .sdf)
-└── evaluation/          # RDKit analysis and docking logs
+└── results/          # RDKit analysis and docking logs
 
 ```
 
@@ -142,4 +142,5 @@ The remaining 5 candidates were ranked by Binding Affinity ($\Delta G$).
 | output_38_hsp90_fragments_ | -8.7 | 5.62 | 0.378 | 0 |
 | output_20_hsp90_fragments_ | -8.5 | 5.62 | 0.370 | 0 |
 | output_37_hsp90_fragments_ | -8.0 | 5.62 | 0.348 | 0 |
+
 | output_47_hsp90_fragments_ | -7.4 | 5.83 | 0.308 | 0 |
