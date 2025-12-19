@@ -6,13 +6,13 @@ This project demonstrates the ability to "recover" a known drug molecule by brea
 
 ---
 ### Phase 1 : Data Preparation (Surgical Cut)
+<img src="https://github.com/user-attachments/assets/933cfacf-4441-4c7b-85a6-9555b67409de" alt="fragments_hsp90" width="100%" />
 
 1. To benchmark the model, we established a "Ground Truth" recovery mission.
 2. Target Selection: Isolated Chain A of HSP90 from PDB: 2XAB.
 3. Ligand Extraction: Extracted the inhibitor NVP-AUY922 and cleaned the environment (removed water/ non-functional ions).
 4. The Cut: Using cut_ligand.py, we identified and deleted the Carbonyl bridge (C=O), splitting the drug into two distinct islands: the Resorcinol ring and the Isoxazole ring.
 
-// image
 
 ### Phase 2: AI Generation (DiffLinker)
 
@@ -118,6 +118,51 @@ The default DiffLinker scripts are hardcoded for CUDA. If you are running on a C
 3. Change: Hardcode self.device = torch.device('cpu') in the EGNN class initialization.
 4. Model Loading: In generate.py, ensure the checkpoint is loaded using map_location='cpu'.
 
+### File Conversion Commands
+
+#### Convert XYZ to SDF
+The .xyz format only contains atomic coordinates and symbols. Converting to .sdf is necessary to store connectivity, bond orders, and metadata.
+
+``` 
+# Batch convert all AI-generated .xyz files to .sdf
+
+for file in *.xyz; do
+    obabel "$file" -O "${file%.xyz}.sdf" -p
+done
+```
+```-p``` : Instructs OpenBabel to perform automated bond perception based on atomic distances. 
+
+*Note: Since XYZ files lack bond information, Open Babel will infer bonds based on atomic proximity.*
+
+#### Convert SDF to PDBQT
+The .pdbqt format is required for docking engines like AutoDock Vina. It adds partial charges (q) and atom type (t) information to the standard PDB format.
+``` 
+obabel receptor_clean.pdb -O receptor.pdbqt -xr -h --partialcharge gasteiger
+```
+
+#### Batch Processing (Alternative)
+Batch convert all SDFs in a folder to PDBQT
+
+```
+# Create directory for docking files
+mkdir -p pdbqt_files
+
+# Batch convert SDF to PDBQT with 3D embedding and Gasteiger charges
+for file in *.sdf; do
+    name=$(basename "$file" .sdf)
+    obabel "$file" -O "pdbqt_files/${name}.pdbqt" -h --gen3d --partialcharge gasteiger
+done
+```
+**Explanation of flags:**
+
+```-O output.pdbqt```  : Specifies the output file.
+
+```--gen3d``` : Generates 3D coordinates (critical if the input SDF is 2D).
+
+```-h``` : Adds essential hydrogen atoms.
+
+```--partialcharge gasteiger``` : Assigns Gasteiger partial charges, which is the standard requirement for Vina-based docking.
+
 
 ## Results
 
@@ -142,5 +187,5 @@ The remaining 5 candidates were ranked by Binding Affinity ($\Delta G$).
 | output_38_hsp90_fragments_ | -8.7 | 5.62 | 0.378 | 0 |
 | output_20_hsp90_fragments_ | -8.5 | 5.62 | 0.370 | 0 |
 | output_37_hsp90_fragments_ | -8.0 | 5.62 | 0.348 | 0 |
-
 | output_47_hsp90_fragments_ | -7.4 | 5.83 | 0.308 | 0 |
+
