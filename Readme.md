@@ -1,5 +1,5 @@
 # DiffLinker Evaluation Pipeline for HSP90 : De Novo Linker Generation and Evaluation
-A deep learning-based drug discovery pipeline that utilizes DiffLinker (Diffusion-based conditional generative model) to design molecular linkers. The project features a rigorous "Surgical Cut" benchmark on HSP90 and a multi-tier evaluation framework integrating AutoDock Vina and RDKit.
+A deep learning-based drug discovery pipeline that utilizes DiffLinker (Opensource diffusion-based conditional generative model) to design molecular linkers. The project features a rigorous "Surgical Cut" benchmark on HSP90 and a multi-tier evaluation framework integrating AutoDock Vina and RDKit.
 
 ### Project Overview
 This project demonstrates the ability to "recover" a known drug molecule by breaking it into fragments and tasking an AI to generate chemically valid, high-affinity linkers. We specifically target HSP90 (Heat Shock Protein 90) using the crystal structure *PDB: 2XAB*.
@@ -188,4 +188,5 @@ The remaining 5 candidates were ranked by Binding Affinity ($\Delta G$).
 | output_20_hsp90_fragments_ | -8.5 | 5.62 | 0.370 | 0 |
 | output_37_hsp90_fragments_ | -8.0 | 5.62 | 0.348 | 0 |
 | output_47_hsp90_fragments_ | -7.4 | 5.83 | 0.308 | 0 |
+
 
